@@ -1,0 +1,21 @@
+﻿using AutoMapper;
+using Ekmob.TechSession.Producer.Dtos;
+using Ekmob.TechSession.Producer.Entites;
+
+namespace Ekmob.TechSession.Producer.Mapper
+{
+    public class Mapping : Profile
+    {
+        public Mapping()
+        {
+            CreateMap<Employee, EmployeeDto>().ReverseMap();
+            CreateMap<Department, DepartmentDto>().ReverseMap();
+
+            CreateMap<Employee, EmployeeCreateDto>().ReverseMap();
+            CreateMap<Employee, EmployeeUpdateDto>().ReverseMap();
+
+            CreateMap<Department, DepartmentCreateDto>().ReverseMap();
+            CreateMap<Department, DepartmentUpdateDto>().ReverseMap();
+        }
+    }
+}

@@ -9,12 +9,18 @@ namespace Ekmob.TechSession.Producer.Services.Abstractions
 {
     public interface IEmployeeService
     {
-        Task<IEnumerable<Employee>> GetEmployees();
-        Task<Employee> GetEmployee(string id);
-        Task<IEnumerable<Employee>> GetEmployeeByDepartment(string departmentId);
 
-        Task Create(Employee employee);
-        Task<bool> Update(Employee employee);
-        Task<bool> Delete(string id);
+        Task<Response<IEnumerable<Employee>>> GetEmployees();
+
+        Task<Response<Employee>> GetEmployee(string id);
+
+        Task<Response<IEnumerable<Employee>>> GetEmployeeByDepartment(string departmentId);
+
+        Task<Response<Employee>> Create(Employee employee);
+
+        Task<Response<NoContent>> Update(Employee employee);
+
+        Task<Response<NoContent>> Delete(string id);
+
     }
 }

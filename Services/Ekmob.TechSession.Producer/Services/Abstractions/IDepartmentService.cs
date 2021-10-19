@@ -9,11 +9,10 @@ namespace Ekmob.TechSession.Producer.Services.Abstractions
 {
     public interface IDepartmentService
     {
-        Task<IEnumerable<Department>> GetDepartments();
-        Task<Department> GetDepartment(string id);
-
-        Task Create(Department department);
-        Task<bool> Update(Department department);
-        Task<bool> Delete(string id);
+        Task<Response<IEnumerable<Department>>> GetDepartments();
+        Task<Response<Department>> GetDepartment(string id);
+        Task<Response<Department>> Create(Department department);
+        Task<Response<NoContent>> Update(Department department);
+        Task<Response<NoContent>> Delete(string id);
     }
 }

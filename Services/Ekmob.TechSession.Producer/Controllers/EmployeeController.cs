@@ -1,92 +1,69 @@
 ﻿using Ekmob.TechSession.Producer.Entites;
 using Ekmob.TechSession.Producer.Services.Abstractions;
-using Microsoft.AspNetCore.Http;
+using Ekmob.TechSession.Shared.BaseController;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Ekmob.TechSession.Producer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeeController : ControllerBase
+    public class EmployeeController : CustomBaseController
     {
         #region Variables
         private readonly IEmployeeService _employeeService;
-        private readonly ILogger<EmployeeController> _logger;
         #endregion
 
         #region Constructor
-        public EmployeeController(IEmployeeService employeeService, ILogger<EmployeeController> logger)
+        public EmployeeController(IEmployeeService employeeService)
         {
             _employeeService = employeeService;
-            _logger = logger;
         }
         #endregion
 
         #region Crud_Actions
-
-        [HttpGet]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
+        [HttpGet(Name = "GetEmployees")]
+        public async Task<IActionResult> GetAll()
         {
-            var employees = await _employeeService.GetEmployees();
-            return Ok(employees);
+            var response = await _employeeService.GetEmployees();
+            return CreateActionResultInstance(response);
         }
 
         [HttpGet("{id:length(24)}", Name = "GetEmployee")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Employee>> GetEmployee(string id)
+        public async Task<IActionResult> GetById(string id)
         {
-            var employee = await _employeeService.GetEmployee(id);
-            if (employee == null)
-            {
-                _logger.LogError($"Employee with id : {id}, hasn't been found in database");
-                return NotFound();
-            }
-            return Ok(employee);
-        }
-
-        [HttpGet("{id:length(24)}", Name = "GetEmployeeByDepartment")]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Employee>> GetEmployeeByDepartment(string departmentId)
-        {
-            var employee = await _employeeService.GetEmployee(departmentId);
-            if (employee == null)
-            {
-                _logger.LogError($"Employee with department id : {departmentId}, hasn't been found in database");
-                return NotFound();
-            }
-            return Ok(employee);
-        }
-
-        [HttpPost]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.Created)]
-        public async Task<ActionResult<Employee>> CreateEmployee([FromBody] Employee employee)
-        {
-            await _employeeService.Create(employee);
-            return CreatedAtRoute("GetEmployee", new { id = employee.Id }, employee);
-        }
-
-        [HttpPut]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> UpdateEmployee([FromBody] Employee employee)
-        {
-            return Ok(await _employeeService.Update(employee));
+            var response = await _employeeService.GetEmployee(id);
+            return CreateActionResultInstance(response);
         }
 
 
-        [HttpDelete("{id:length(24)}")]
-        [ProducesResponseType(typeof(Employee), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> DeleteEmployeeById(string id)
+        [HttpGet("{id:length(24)}", Name = "GetEmployeesByDepartmentId")]
+        [Route("/api/[controller]/GetAllByDepartmentId/{departmentId}")]
+        public async Task<IActionResult> GetAllByDepartmentId(string departmentId)
         {
-            return Ok(await _employeeService.Delete(id));
+            var response = await _employeeService.GetEmployeeByDepartment(departmentId);
+            return CreateActionResultInstance(response);
+        }
+
+        [HttpPost(Name = "CreateEmployee")]
+        public async Task<IActionResult> Create(Employee employee)
+        {
+            var response = await _employeeService.Create(employee);
+            return CreateActionResultInstance(response);
+        }
+
+        [HttpPut(Name = "UpdateEmployee")]
+        public async Task<IActionResult> Update(Employee employee)
+        {
+            var response = await _employeeService.Update(employee);
+            return CreateActionResultInstance(response);
+        }
+
+        [HttpDelete("{id:length(24)}", Name = "DeleteEmployee")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var response = await _employeeService.Delete(id);
+            return CreateActionResultInstance(response);
         }
         #endregion
     }

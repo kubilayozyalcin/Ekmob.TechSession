@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="MassTransit.AspNetCore" Version="7.2.3" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="7.2.3" />
     <PackageReference Include="MongoDB.Bson" Version="2.13.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
@@ -12,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Ekmob.TechSession.Core\Ekmob.TechSession.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\Ekmob.TechSession.Shared\Ekmob.TechSession.Shared.csproj" />
   </ItemGroup>
 
 </Project>
