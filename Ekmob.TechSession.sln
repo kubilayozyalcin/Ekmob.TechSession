@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{CBBC8D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ekmob.TechSession.Shared", "Shared\Ekmob.TechSession.Shared\Ekmob.TechSession.Shared.csproj", "{F795E747-4CA2-4C7F-9077-A0D7570E7D8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ekmob.TechSession.RabbitMQ", "Common\Ekmob.TechSession.RabbitMQ\Ekmob.TechSession.RabbitMQ.csproj", "{C5725379-B947-48AF-9230-6C7FE80D1D97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F795E747-4CA2-4C7F-9077-A0D7570E7D8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F795E747-4CA2-4C7F-9077-A0D7570E7D8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F795E747-4CA2-4C7F-9077-A0D7570E7D8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5725379-B947-48AF-9230-6C7FE80D1D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5725379-B947-48AF-9230-6C7FE80D1D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5725379-B947-48AF-9230-6C7FE80D1D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5725379-B947-48AF-9230-6C7FE80D1D97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{8E680646-414C-4A86-B318-E1870358169A} = {B719D99C-3E7A-4FE2-B809-A26FE8D147E6}
 		{900D46D9-80F0-4699-BDF7-5F7A1CCF0B11} = {7704E6F9-2835-4FFD-BFEF-3F49780FBAAE}
 		{F795E747-4CA2-4C7F-9077-A0D7570E7D8D} = {CBBC8D9B-3D94-4131-A7C1-8A6EDBB0FA94}
+		{C5725379-B947-48AF-9230-6C7FE80D1D97} = {7704E6F9-2835-4FFD-BFEF-3F49780FBAAE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3B7A27E8-371C-44C8-8ED5-D9CEC9C17EA7}

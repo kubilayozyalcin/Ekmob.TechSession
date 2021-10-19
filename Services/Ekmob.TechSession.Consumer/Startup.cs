@@ -26,6 +26,7 @@ namespace Ekmob.TechSession.Consumer
         public void ConfigureServices(IServiceCollection services)
         {
 
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
