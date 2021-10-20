@@ -7,14 +7,18 @@
   <ItemGroup>
     <PackageReference Include="AspNetCore.MassTransit" Version="1.1.0" />
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.2.3" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MongoDB.Bson" Version="2.13.2" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Ekmob.TechSession.Core\Ekmob.TechSession.Core.csproj" />
+    <ProjectReference Include="..\..\Common\Ekmob.TechSession.Application\Ekmob.TechSession.Application.csproj" />
+    <ProjectReference Include="..\..\Common\Ekmob.TechSession.Infrastructure\Ekmob.TechSession.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Common\Ekmob.TechSession.RabbitMQ\Ekmob.TechSession.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\Shared\Ekmob.TechSession.Shared\Ekmob.TechSession.Shared.csproj" />
   </ItemGroup>
 

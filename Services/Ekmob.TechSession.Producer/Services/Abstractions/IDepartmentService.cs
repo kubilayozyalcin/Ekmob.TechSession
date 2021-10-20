@@ -1,8 +1,6 @@
-﻿using Ekmob.TechSession.Core.Utilities.Response;
-using Ekmob.TechSession.Producer.Entites;
-using System;
+﻿using Ekmob.TechSession.Producer.Entites;
+using Ekmob.TechSession.Shared.Utilities.Response;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ekmob.TechSession.Producer.Services.Abstractions

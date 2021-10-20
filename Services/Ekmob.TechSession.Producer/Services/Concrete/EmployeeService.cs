@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ekmob.TechSession.Core.Utilities.Response;
+using Ekmob.TechSession.Shared.Utilities.Response;
 using Ekmob.TechSession.Producer.Data.Abstractions;
 using Ekmob.TechSession.Producer.Entites;
 using Ekmob.TechSession.Producer.Services.Abstractions;
@@ -7,7 +7,6 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mass = MassTransit;
 
 namespace Ekmob.TechSession.Producer.Services.Concrete
 {
@@ -15,12 +14,10 @@ namespace Ekmob.TechSession.Producer.Services.Concrete
     {
         private readonly ISourcingContext _context;
         private readonly IMapper _mapper;
-        private readonly Mass.IPublishEndpoint _publishEndpoint;
-        public EmployeeService(ISourcingContext context, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
+        public EmployeeService(ISourcingContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<Response<IEnumerable<Employee>>> GetEmployees()
@@ -86,8 +83,6 @@ namespace Ekmob.TechSession.Producer.Services.Concrete
 
             if (result == null)
                 return Response<NoContent>.Fail("Employee not found", 404);
-
-            //await _publishEndpoint.Publish<EmployeeNameChangedEvent>(new EmployeeNameChangedEvent { Id = updateEmployee.Id, UpdatedName = updateEmployee.Name });
 
             return Response<NoContent>.Success(204);
         }

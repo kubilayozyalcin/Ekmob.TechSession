@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ekmob.TechSession.Core.Utilities.Response;
+using Ekmob.TechSession.Shared.Utilities.Response;
 using Ekmob.TechSession.Producer.Data.Abstractions;
 using Ekmob.TechSession.Producer.Entites;
 using Ekmob.TechSession.Producer.Services.Abstractions;

@@ -1,15 +1,22 @@
+using Ekmob.TechSession.Consumer.Consumers;
+using Ekmob.TechSession.Consumer.Data.Abstractions;
+using Ekmob.TechSession.Consumer.Data.Concrete;
+using Ekmob.TechSession.Consumer.Extension;
+using Ekmob.TechSession.Consumer.Services.Abstractions;
+using Ekmob.TechSession.Consumer.Services.Concrete;
+using Ekmob.TechSession.Consumer.Settings;
+using Ekmob.TechSession.RabbitMQ;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RabbitMQ.Client;
+using Ekmob.TechSession.Application;
+using Ekmob.TechSession.Infrastructure;
 
 namespace Ekmob.TechSession.Consumer
 {
@@ -25,9 +32,59 @@ namespace Ekmob.TechSession.Consumer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Configuration Dependencies
+            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
+            services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+            #endregion
 
+            #region Project Dependencies
+            services.AddTransient<ICustomerContext, CustomerContext>();
+            services.AddTransient<ICustomerService, CustomerService>();
+            #endregion
+
+            #region Add Infrastructure
+
+            services.AddInfrastructure(Configuration);
+
+            #endregion
+
+            #region Add Application
+
+            services.AddApplication();
+
+            #endregion
 
             services.AddControllers();
+
+            services.AddAutoMapper(typeof(Startup));
+
+
+            #region EventBus
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+                var factory = new ConnectionFactory()
+                {
+                    HostName = Configuration["EventBus:HostName"]
+                };
+
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:UserName"]))
+                    factory.UserName = Configuration["EventBus:UserName"];
+
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:Password"]))
+                    factory.UserName = Configuration["EventBus:Password"];
+
+                var retryCount = 5;
+
+                if (!string.IsNullOrWhiteSpace(Configuration["EventBus:RetryCount"]))
+                    retryCount = int.Parse(Configuration["EventBus:RetryCount"]);
+
+                return new DefaultRabbitMQPersistentConnection(factory, retryCount, logger);
+            });
+
+            services.AddSingleton<EventBusCustomerCreateConsumer>();
+            #endregion
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ekmob.TechSession.Consumer", Version = "v1" });
@@ -52,6 +109,9 @@ namespace Ekmob.TechSession.Consumer
             {
                 endpoints.MapControllers();
             });
+
+            // Extension
+            app.UseEventBusListener();
         }
     }
 }

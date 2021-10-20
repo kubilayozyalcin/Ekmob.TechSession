@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ekmob.TechSession.Producer.Dtos;
+using Ekmob.TechSession.RabbitMQ.Events;
 using Ekmob.TechSession.Producer.Entites;
 
 namespace Ekmob.TechSession.Producer.Mapper
@@ -8,14 +8,7 @@ namespace Ekmob.TechSession.Producer.Mapper
     {
         public Mapping()
         {
-            CreateMap<Employee, EmployeeDto>().ReverseMap();
-            CreateMap<Department, DepartmentDto>().ReverseMap();
-
-            CreateMap<Employee, EmployeeCreateDto>().ReverseMap();
-            CreateMap<Employee, EmployeeUpdateDto>().ReverseMap();
-
-            CreateMap<Department, DepartmentCreateDto>().ReverseMap();
-            CreateMap<Department, DepartmentUpdateDto>().ReverseMap();
+            CreateMap<CustomerCreateEvent, Employee>().ReverseMap();
         }
     }
 }

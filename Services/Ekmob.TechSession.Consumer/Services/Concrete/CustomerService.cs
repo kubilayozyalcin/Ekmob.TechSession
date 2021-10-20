@@ -2,7 +2,7 @@
 using Ekmob.TechSession.Consumer.Data.Abstractions;
 using Ekmob.TechSession.Consumer.Entities;
 using Ekmob.TechSession.Consumer.Services.Abstractions;
-using Ekmob.TechSession.Core.Utilities.Response;
+using Ekmob.TechSession.Shared.Utilities.Response;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
