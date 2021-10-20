@@ -27,9 +27,9 @@ namespace Ekmob.TechSession.Consumer.Controllers
         [HttpGet("GetCustomersByName/{Name}")]
         [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<IEnumerable<CustomerResponse>>> GetOrdersByUserName(string name)
+        public async Task<ActionResult<IEnumerable<CustomerResponse>>> GetCustomersByUserName(string Name)
         {
-            var query = new GetCustomersNameQuery(name);
+            var query = new GetCustomersNameQuery(Name);
 
             var orders = await _mediator.Send(query);
             if (orders.Count() == decimal.Zero)
@@ -40,7 +40,7 @@ namespace Ekmob.TechSession.Consumer.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(CustomerResponse), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<CustomerResponse>> OrderCreate([FromBody] CustomerCreateCommand command)
+        public async Task<ActionResult<CustomerResponse>> CustomerCreate([FromBody] CustomerCreateCommand command)
         {
             var result = await _mediator.Send(command);
             return Ok(result);

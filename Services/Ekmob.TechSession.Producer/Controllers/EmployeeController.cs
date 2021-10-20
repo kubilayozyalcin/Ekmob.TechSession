@@ -108,8 +108,15 @@ namespace Ekmob.TechSession.Producer.Controllers
                 return BadRequest();
             }
 
-            CustomerCreateEvent eventMessage = _mapper.Map<CustomerCreateEvent>(employeeResult);
+            //CustomerCreateEvent eventMessage = _mapper.Map<CustomerCreateEvent>(employeeResult);
+            CustomerCreateEvent eventMessage = new CustomerCreateEvent();
             eventMessage.DepartmentName = departmentResult.Data.DepartmentName;
+            eventMessage.Name = employeeResult.Data.Name;
+            eventMessage.IdentityNumber = employeeResult.Data.IdentityNumber;
+            eventMessage.Email = employeeResult.Data.Email;
+            eventMessage.JobTitle = employeeResult.Data.JobTitle;
+            eventMessage.DepartmentId = employeeResult.Data.DepartmentId;
+            eventMessage.Id = employeeResult.Data.Id;
 
             try
             {
