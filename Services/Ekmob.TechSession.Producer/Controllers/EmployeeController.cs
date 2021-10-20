@@ -65,7 +65,14 @@ namespace Ekmob.TechSession.Producer.Controllers
         public async Task<IActionResult> Create(EmployeeCreateDto employeeCreateDto)
         {
             var response = await _employeeService.Create(employeeCreateDto);
+
+            if (response.IsSuccessful)
+            {
+                var rabbitMQ = CheckCustomer(response.Data.Id);
+            }
+
             return CreateActionResultInstance(response);
+
         }
 
         [HttpPut]
@@ -87,11 +94,11 @@ namespace Ekmob.TechSession.Producer.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        public async Task<IActionResult> CreateCustomer(EmployeeCreateDto employeeCreateDto)
+        public async Task<IActionResult> CheckCustomer(string id)
         {
-            var employeeResult = await _employeeService.Create(employeeCreateDto);
+            var employeeResult = await _employeeService.GetEmployee(id);
 
-            var departmentResult = await _departmentService.GetDepartment(employeeCreateDto.DepartmentId);
+            var departmentResult = await _departmentService.GetDepartment(employeeResult.Data.DepartmentId);
 
             if (departmentResult == null)
                 return NotFound();

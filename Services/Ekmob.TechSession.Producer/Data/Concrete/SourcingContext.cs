@@ -16,10 +16,10 @@ namespace Ekmob.TechSession.Producer.Data.Concrete
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
 
-            Employees = database.GetCollection<Employee>(settings.EmployeeCollectionName);
             Departments = database.GetCollection<Department>(settings.DepartmentCollectionName);
-
             DepartmentContextSeed.SeedData(Departments);
+
+            Employees = database.GetCollection<Employee>(settings.EmployeeCollectionName);
             EmployeeContextSeed.SeedData(Employees, Departments);
         }
 
