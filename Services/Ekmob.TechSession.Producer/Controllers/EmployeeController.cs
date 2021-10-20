@@ -37,14 +37,14 @@ namespace Ekmob.TechSession.Producer.Controllers
         #endregion
 
         #region Crud_Actions
-        [HttpGet(Name = "GetEmployees")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var response = await _employeeService.GetEmployees();
             return CreateActionResultInstance(response);
         }
 
-        [HttpGet("{id:length(24)}", Name = "GetEmployee")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
             var response = await _employeeService.GetEmployee(id);
@@ -52,7 +52,7 @@ namespace Ekmob.TechSession.Producer.Controllers
         }
 
 
-        [HttpGet("{id:length(24)}", Name = "GetEmployeesByDepartmentId")]
+        [HttpGet]
         [Route("/api/[controller]/GetAllByDepartmentId/{departmentId}")]
         public async Task<IActionResult> GetAllByDepartmentId(string departmentId)
         {
@@ -60,21 +60,21 @@ namespace Ekmob.TechSession.Producer.Controllers
             return CreateActionResultInstance(response);
         }
 
-        [HttpPost(Name = "CreateEmployee")]
+        [HttpPost]
         public async Task<IActionResult> Create(Employee employee)
         {
             var response = await _employeeService.Create(employee);
             return CreateActionResultInstance(response);
         }
 
-        [HttpPut(Name = "UpdateEmployee")]
+        [HttpPut]
         public async Task<IActionResult> Update(Employee employee)
         {
             var response = await _employeeService.Update(employee);
             return CreateActionResultInstance(response);
         }
 
-        [HttpDelete("{id:length(24)}", Name = "DeleteEmployee")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _employeeService.Delete(id);
@@ -82,7 +82,7 @@ namespace Ekmob.TechSession.Producer.Controllers
         }
 
 
-        [HttpPost("CreateCustomer")]
+        [HttpPost("CreateCustomerRabbitMQ")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]

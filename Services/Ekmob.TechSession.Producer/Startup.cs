@@ -75,14 +75,7 @@ namespace Ekmob.TechSession.Producer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Ekmob.TechSession.Producer", Version = "v1" });
             });
 
-            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                        .WithOrigins("https://localhost:8851");
-            }));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
