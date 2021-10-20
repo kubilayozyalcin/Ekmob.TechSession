@@ -1,4 +1,5 @@
-﻿using Ekmob.TechSession.Producer.Entites;
+﻿using Ekmob.TechSession.Producer.Dtos;
+using Ekmob.TechSession.Producer.Entites;
 using Ekmob.TechSession.Producer.Services.Abstractions;
 using Ekmob.TechSession.Shared.BaseController;
 using Microsoft.AspNetCore.Mvc;
@@ -38,25 +39,12 @@ namespace Ekmob.TechSession.Producer.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(Department department)
+        public async Task<IActionResult> Create(DepartmentCreateDto department)
         {
             var response = await _departmentService.Create(department);
             return CreateActionResultInstance(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Department department)
-        {
-            var response = await _departmentService.Update(department);
-            return CreateActionResultInstance(response);
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> Delete(string id)
-        {
-            var response = await _departmentService.Delete(id);
-            return CreateActionResultInstance(response);
-        }
         #endregion
     }
 }

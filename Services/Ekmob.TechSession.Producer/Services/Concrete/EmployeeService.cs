@@ -7,6 +7,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ekmob.TechSession.Producer.Dtos;
 
 namespace Ekmob.TechSession.Producer.Services.Concrete
 {
@@ -20,7 +21,7 @@ namespace Ekmob.TechSession.Producer.Services.Concrete
             _mapper = mapper;
         }
 
-        public async Task<Response<IEnumerable<Employee>>> GetEmployees()
+        public async Task<Response<List<EmployeeDto>>> GetEmployees()
         {
             var employees = await _context.Employees.Find(employee => true).ToListAsync();
 
@@ -34,22 +35,22 @@ namespace Ekmob.TechSession.Producer.Services.Concrete
             else
                 employees = new List<Employee>();
 
-            return Response<IEnumerable<Employee>>.Success(_mapper.Map<IEnumerable<Employee>>(employees), 200);
+            return Response<List<EmployeeDto>>.Success(_mapper.Map<List<EmployeeDto>>(employees), 200);
         }
 
-        public async Task<Response<Employee>> GetEmployee(string id)
+        public async Task<Response<EmployeeDto>> GetEmployee(string id)
         {
-            var employee = await _context.Employees.Find<Employee>(x => x.Id == id).FirstOrDefaultAsync();
+            var employee = await _context.Employees.Find(x => x.Id == id).FirstOrDefaultAsync();
 
             if (employee == null)
-                return Response<Employee>.Fail("Employee not found", 404);
+                return Response<EmployeeDto>.Fail("Employee not found", 404);
 
             employee.Department = await _context.Departments.Find(x => x.Id == employee.DepartmentId).FirstAsync();
 
-            return Response<Employee>.Success(_mapper.Map<Employee>(employee), 200);
+            return Response<EmployeeDto>.Success(_mapper.Map<EmployeeDto>(employee), 200);
         }
 
-        public async Task<Response<IEnumerable<Employee>>> GetEmployeeByDepartment(string departmentId)
+        public async Task<Response<List<EmployeeDto>>> GetEmployeeByDepartment(string departmentId)
         {
             var employees = await _context.Employees.Find(x => x.DepartmentId == departmentId).ToListAsync();
 
@@ -63,23 +64,23 @@ namespace Ekmob.TechSession.Producer.Services.Concrete
             else
                 employees = new List<Employee>();
 
-            return Response<IEnumerable<Employee>>.Success(_mapper.Map<IEnumerable<Employee>>(employees), 200);
+            return Response<List<EmployeeDto>>.Success(_mapper.Map<List<EmployeeDto>>(employees), 200);
         }
 
-        public async Task<Response<Employee>> Create(Employee employee)
+        public async Task<Response<EmployeeDto>> Create(EmployeeCreateDto employeeCreateDto)
         {
-            var newEmployee = _mapper.Map<Employee>(employee);
+            var newEmployee = _mapper.Map<Employee>(employeeCreateDto);
 
-            await _context.Employees.InsertOneAsync(employee);
+            await _context.Employees.InsertOneAsync(newEmployee);
 
-            return Response<Employee>.Success(_mapper.Map<Employee>(employee), 200);
+            return Response<EmployeeDto>.Success(_mapper.Map<EmployeeDto>(newEmployee), 200);
         }
 
-        public async Task<Response<NoContent>> Update(Employee employee)
+        public async Task<Response<NoContent>> Update(EmployeeUpdateDto employeeUpdateDto)
         {
-            var updateEmployee = _mapper.Map<Employee>(employee);
+            var updateEmployee = _mapper.Map<Employee>(employeeUpdateDto);
 
-            var result = await _context.Employees.FindOneAndReplaceAsync(x => x.Id == updateEmployee.Id, employee);
+            var result = await _context.Employees.FindOneAndReplaceAsync(x => x.Id == employeeUpdateDto.Id, updateEmployee);
 
             if (result == null)
                 return Response<NoContent>.Fail("Employee not found", 404);

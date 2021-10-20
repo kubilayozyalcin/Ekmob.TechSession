@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Ekmob.TechSession.Producer.Dtos;
 
 namespace Ekmob.TechSession.Producer.Controllers
 {
@@ -61,16 +62,16 @@ namespace Ekmob.TechSession.Producer.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Employee employee)
+        public async Task<IActionResult> Create(EmployeeCreateDto employeeCreateDto)
         {
-            var response = await _employeeService.Create(employee);
+            var response = await _employeeService.Create(employeeCreateDto);
             return CreateActionResultInstance(response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(Employee employee)
+        public async Task<IActionResult> Update(EmployeeUpdateDto employeeUpdateDto)
         {
-            var response = await _employeeService.Update(employee);
+            var response = await _employeeService.Update(employeeUpdateDto);
             return CreateActionResultInstance(response);
         }
 
@@ -86,11 +87,11 @@ namespace Ekmob.TechSession.Producer.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        public async Task<IActionResult> CreateCustomer(Employee employee)
+        public async Task<IActionResult> CreateCustomer(EmployeeCreateDto employeeCreateDto)
         {
-            var employeeResult = await _employeeService.Create(employee);
+            var employeeResult = await _employeeService.Create(employeeCreateDto);
 
-            var departmentResult = await _departmentService.GetDepartment(employee.DepartmentId);
+            var departmentResult = await _departmentService.GetDepartment(employeeCreateDto.DepartmentId);
 
             if (departmentResult == null)
                 return NotFound();
