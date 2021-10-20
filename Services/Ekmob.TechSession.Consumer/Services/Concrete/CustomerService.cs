@@ -6,7 +6,6 @@ using Ekmob.TechSession.Shared.Utilities.Response;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mass = MassTransit;
 
 namespace Ekmob.TechSession.Consumer.Services.Concrete
 {
@@ -14,12 +13,10 @@ namespace Ekmob.TechSession.Consumer.Services.Concrete
     {
         private readonly ICustomerContext _customerContext;
         private readonly IMapper _mapper;
-        private readonly Mass.IPublishEndpoint _publishEndpoint;
-        public CustomerService(ICustomerContext customerContext, IMapper mapper, Mass.IPublishEndpoint publishEndpoint)
+        public CustomerService(ICustomerContext customerContext, IMapper mapper)
         {
             _customerContext = customerContext;
             _mapper = mapper;
-            _publishEndpoint = publishEndpoint;
         }
 
         public async Task<Response<IEnumerable<Customer>>> GetCustomers()

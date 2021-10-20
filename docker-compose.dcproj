@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>f2147a8f-a9e0-4b70-b15a-7ca2dbcd86e6</ProjectGuid>
+    <ProjectGuid>5caf5d21-1dd4-40c1-9a9b-4f94c31979df</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
     <DockerServiceName>ekmob.techsession.producer</DockerServiceName>
