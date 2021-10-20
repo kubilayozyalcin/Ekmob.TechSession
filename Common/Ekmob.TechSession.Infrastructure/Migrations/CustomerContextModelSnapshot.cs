@@ -13,13 +13,12 @@ namespace Ekmob.TechSession.Infrastructure.Migrations
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
-#pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Ekmob.TechSession.Domain.Entities.Order", b =>
+            modelBuilder.Entity("Ekmob.TechSession.Domain.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +47,6 @@ namespace Ekmob.TechSession.Infrastructure.Migrations
 
                     b.ToTable("Customers");
                 });
-#pragma warning restore 612, 618
         }
     }
 }

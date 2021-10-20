@@ -2,6 +2,7 @@
 using Ekmob.TechSession.RabbitMQ.Events;
 using Ekmob.TechSession.Producer.Entites;
 using Ekmob.TechSession.Producer.Dtos;
+using Ekmob.TechSession.Application.Commands.CustomerCreate;
 
 namespace Ekmob.TechSession.Producer.Mapper
 {
@@ -9,7 +10,7 @@ namespace Ekmob.TechSession.Producer.Mapper
     {
         public Mapping()
         {
-            CreateMap<CustomerCreateEvent, Employee>().ReverseMap();
+            CreateMap<CustomerCreateEvent, CustomerCreateCommand>().ReverseMap();
 
             CreateMap<Employee, EmployeeDto>().ReverseMap();
             CreateMap<Department, DepartmentDto>().ReverseMap();

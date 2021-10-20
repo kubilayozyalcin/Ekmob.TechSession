@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Ekmob.TechSession.Application\Ekmob.TechSession.Application.csproj" />
     <ProjectReference Include="..\..\Common\Ekmob.TechSession.RabbitMQ\Ekmob.TechSession.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\Shared\Ekmob.TechSession.Shared\Ekmob.TechSession.Shared.csproj" />
   </ItemGroup>

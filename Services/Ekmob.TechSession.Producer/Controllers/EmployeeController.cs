@@ -1,15 +1,14 @@
 ﻿using AutoMapper;
-using Ekmob.TechSession.RabbitMQ.Events;
-using Ekmob.TechSession.Producer.Entites;
+using Ekmob.TechSession.Producer.Dtos;
 using Ekmob.TechSession.Producer.Services.Abstractions;
 using Ekmob.TechSession.RabbitMQ.Core;
+using Ekmob.TechSession.RabbitMQ.Events;
 using Ekmob.TechSession.Shared.BaseController;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Ekmob.TechSession.Producer.Dtos;
 
 namespace Ekmob.TechSession.Producer.Controllers
 {

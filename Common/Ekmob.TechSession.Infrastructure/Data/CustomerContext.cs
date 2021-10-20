@@ -11,5 +11,6 @@ namespace Ekmob.TechSession.Infrastructure.Data
         }
 
         public DbSet<Customer> Customers { get; set; }
+
     }
 }
