@@ -1,7 +1,13 @@
-﻿using Ekmob.TechSession.Producer.Entites;
+﻿using AutoMapper;
+using Ekmob.TechSession.Producer.Dtos;
 using Ekmob.TechSession.Producer.Services.Abstractions;
+using Ekmob.TechSession.RabbitMQ.Core;
+using Ekmob.TechSession.RabbitMQ.Events;
 using Ekmob.TechSession.Shared.BaseController;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Ekmob.TechSession.Producer.Controllers
@@ -12,24 +18,33 @@ namespace Ekmob.TechSession.Producer.Controllers
     {
         #region Variables
         private readonly IEmployeeService _employeeService;
+        private readonly IDepartmentService _departmentService;
+        private readonly ILogger<EmployeeController> _logger;
+        private readonly IMapper _mapper;
+        private readonly EventBusRabbitMQProducer _eventBus;
         #endregion
 
         #region Constructor
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService,
+            EventBusRabbitMQProducer eventBus, ILogger<EmployeeController> logger, IMapper mapper)
         {
             _employeeService = employeeService;
+            _departmentService = departmentService;
+            _logger = logger;
+            _mapper = mapper;
+            _eventBus = eventBus;
         }
         #endregion
 
         #region Crud_Actions
-        [HttpGet(Name = "GetEmployees")]
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var response = await _employeeService.GetEmployees();
             return CreateActionResultInstance(response);
         }
 
-        [HttpGet("{id:length(24)}", Name = "GetEmployee")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
             var response = await _employeeService.GetEmployee(id);
@@ -37,7 +52,7 @@ namespace Ekmob.TechSession.Producer.Controllers
         }
 
 
-        [HttpGet("{id:length(24)}", Name = "GetEmployeesByDepartmentId")]
+        [HttpGet]
         [Route("/api/[controller]/GetAllByDepartmentId/{departmentId}")]
         public async Task<IActionResult> GetAllByDepartmentId(string departmentId)
         {
@@ -45,25 +60,74 @@ namespace Ekmob.TechSession.Producer.Controllers
             return CreateActionResultInstance(response);
         }
 
-        [HttpPost(Name = "CreateEmployee")]
-        public async Task<IActionResult> Create(Employee employee)
+        [HttpPost]
+        public async Task<IActionResult> Create(EmployeeCreateDto employeeCreateDto)
         {
-            var response = await _employeeService.Create(employee);
+            var response = await _employeeService.Create(employeeCreateDto);
+
+            if (response.IsSuccessful)
+            {
+                var rabbitMQ = CheckCustomer(response.Data.Id);
+            }
+
+            return CreateActionResultInstance(response);
+
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(EmployeeUpdateDto employeeUpdateDto)
+        {
+            var response = await _employeeService.Update(employeeUpdateDto);
             return CreateActionResultInstance(response);
         }
 
-        [HttpPut(Name = "UpdateEmployee")]
-        public async Task<IActionResult> Update(Employee employee)
-        {
-            var response = await _employeeService.Update(employee);
-            return CreateActionResultInstance(response);
-        }
-
-        [HttpDelete("{id:length(24)}", Name = "DeleteEmployee")]
+        [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
             var response = await _employeeService.Delete(id);
             return CreateActionResultInstance(response);
+        }
+
+
+        [HttpPost("CreateCustomerRabbitMQ")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        public async Task<IActionResult> CheckCustomer(string id)
+        {
+            var employeeResult = await _employeeService.GetEmployee(id);
+
+            var departmentResult = await _departmentService.GetDepartment(employeeResult.Data.DepartmentId);
+
+            if (departmentResult == null)
+                return NotFound();
+
+            if (!departmentResult.IsSuccessful)
+            {
+                _logger.LogError("Department can not be completed");
+                return BadRequest();
+            }
+
+            //CustomerCreateEvent eventMessage = _mapper.Map<CustomerCreateEvent>(employeeResult);
+            CustomerCreateEvent eventMessage = new CustomerCreateEvent();
+            eventMessage.DepartmentName = departmentResult.Data.DepartmentName;
+            eventMessage.Name = employeeResult.Data.Name;
+            eventMessage.IdentityNumber = employeeResult.Data.IdentityNumber;
+            eventMessage.Email = employeeResult.Data.Email;
+            eventMessage.JobTitle = employeeResult.Data.JobTitle;
+            eventMessage.Id = employeeResult.Data.Id;
+
+            try
+            {
+                _eventBus.Publish(EventBusConstants.CustomerCreateQueue, eventMessage);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ERROR Publishing integration event: {EventId} from {AppName}", eventMessage.Id, "Ekmob");
+                throw;
+            }
+
+            return Accepted();
         }
         #endregion
     }

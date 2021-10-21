@@ -1,0 +1,27 @@
+version: '3.4'
+
+services:
+  ekmobmongodb:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq:3-management
+
+  ekmobsqldb:
+    image: mcr.microsoft.com/mssql/server
+
+  ekmob.techsession.producer:
+    image: ${DOCKER_REGISTRY-}ekmobtechsessionproducer
+    build:
+      context: .
+      dockerfile: Services/Ekmob.TechSession.Producer/Dockerfile
+
+  ekmob.techsession.consumer:
+    image: ${DOCKER_REGISTRY-}ekmobtechsessionconsumer
+    build:
+      context: .
+      dockerfile: Services/Ekmob.TechSession.Consumer/Dockerfile
+
+
+
+

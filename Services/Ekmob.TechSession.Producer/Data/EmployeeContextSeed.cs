@@ -7,13 +7,14 @@ namespace Ekmob.TechSession.Producer.Data
 {
     public class EmployeeContextSeed
     {
-        public static void SeedData(IMongoCollection<Employee> employeeCollection, IMongoCollection<Department> departmentCollection)
+        public static void SeedData(IMongoCollection<Employee> employeeCollection, 
+            IMongoCollection<Department> departmentCollection)
         {
             bool existEmployee = employeeCollection.Find(p => true).Any();
             if (!existEmployee)
             {
                 bool existDepartment = departmentCollection.Find(p => true).Any();
-                if(!existDepartment)
+                if(existDepartment)
                 {
                     string departmentId = departmentCollection.Find(p => true).FirstOrDefaultAsync().Result.Id;
                     employeeCollection.InsertManyAsync(GetConfigureEmployees(departmentId));

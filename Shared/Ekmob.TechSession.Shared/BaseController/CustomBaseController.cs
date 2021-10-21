@@ -1,4 +1,4 @@
-﻿using Ekmob.TechSession.Core.Utilities.Response;
+﻿using Ekmob.TechSession.Shared.Utilities.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ekmob.TechSession.Shared.BaseController

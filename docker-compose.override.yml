@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+  ekmobmongodb:
+    container_name: ekmobmongodb
+    restart: always
+    volumes:
+       - ${WEBAPP_STORAGE_HOME}/site:/data/db
+    ports:
+       - "27017:27017"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+       - "5672:5672"
+       - "15672:15672"
+
+  ekmobsqldb:
+    container_name: ekmobsqldb
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Odb12345678"
+      ACCEPT_EULA: "Y"
+
+  ekmob.techsession.producer:
+    container_name: ekmobtechsessionproducer
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString=mongodb://ekmobmongodb:27017"
+      - "EventBus:HostName=rabbitmq"
+    depends_on:
+      - ekmobmongodb
+      - rabbitmq
+    volumes:
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "8001:80"
+
+  ekmob.techsession.consumer:
+    container_name: ekmobtechsessionconsumer
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:CustomerConnection=Server=Bigroup;Database=CustomerDb;Trusted_Connection=True"
+      - "EventBus:HostName=rabbitmq"
+    depends_on:
+      - ekmobsqldb
+      - rabbitmq
+    volumes:
+      - ${HOME}/.aspnet/https:/root/.aspnet/https/
+    ports:
+      - "8002:80"
+
+

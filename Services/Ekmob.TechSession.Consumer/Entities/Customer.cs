@@ -17,6 +17,7 @@ namespace Ekmob.TechSession.Consumer.Entities
         public string Email { get; set; }
         public string DepartmentName { get; set; }
         public string JobTitle { get; set; }
+        public string CreateDate { get; set; }
 
     }
 }

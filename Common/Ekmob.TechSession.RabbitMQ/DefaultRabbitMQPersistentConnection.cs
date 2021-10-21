@@ -19,8 +19,8 @@ namespace Ekmob.TechSession.RabbitMQ
         private bool _disposed;
 
         public DefaultRabbitMQPersistentConnection(
-            IConnectionFactory connectionFactory, 
-            int retryCount, 
+            IConnectionFactory connectionFactory,
+            int retryCount,
             ILogger<DefaultRabbitMQPersistentConnection> logger)
         {
             _connectionFactory = connectionFactory;
@@ -28,9 +28,11 @@ namespace Ekmob.TechSession.RabbitMQ
             _logger = logger;
         }
 
-        public bool IsConnected {
+        public bool IsConnected
+        {
             get
             {
+                // Connecttion Not Null & Open & Not Disposed
                 return _connection != null && _connection.IsOpen && !_disposed;
             }
         }
@@ -39,24 +41,35 @@ namespace Ekmob.TechSession.RabbitMQ
         {
             _logger.LogInformation("RabbitMQ Client is trying to connect");
 
+            // Polly frameworkü ile bir retryPolicy oluşturularak tekrar tekrar bağlantı sağlanmaya çalışılır.
+            // SocketException yada BrokerUnreachableException rabbitMQ ye ulaşamadığı durumlarda hata fırlatır : RabbitMQ kütüphanesi
+            // Hata alındığında WaitAndRetry adında Belirlenen koşullarda Bekle terkrar dene policy oluşturulur.
+            // retryAttempt kaçıncı deneme olduğunu gösterir deneme sayısına göre bekleme süresi saniye olarak hesaplanarak 
+            // tekrar bağlanma isteği oluşturulur.
+
             var policy = RetryPolicy.Handle<SocketException>()
                 .Or<BrokerUnreachableException>()
                 .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                 {
-                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
+                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})",
+                        $"{time.TotalSeconds:n1}", ex.Message);
                 });
 
-            policy.Execute(() => {
+            // Execute metodu run edilerek connection oluşturulur.
+            policy.Execute(() =>
+            {
                 _connection = _connectionFactory.CreateConnection();
             });
 
-            if(IsConnected)
+            // İşlemler başarılı değilse ilgili eventlere yönlendirilir. Bu metodlarda tekrar connect olmasını sağlıyor olacağız.
+            if (IsConnected)
             {
                 _connection.ConnectionShutdown += OnConnectionShutdown;
                 _connection.CallbackException += OnCallbackException;
                 _connection.ConnectionBlocked += OnConnectionBlocked;
 
-                _logger.LogInformation("RabbitMQ Client acquired a persistent connection to '{HostName}' and is subscribed to failure events", _connection.Endpoint.HostName);
+                _logger.LogInformation("RabbitMQ Client acquired a persistent connection to '{HostName}' " +
+                    "and is subscribed to failure events", _connection.Endpoint.HostName);
 
                 return true;
             }
@@ -95,20 +108,23 @@ namespace Ekmob.TechSession.RabbitMQ
             TryConnect();
         }
 
+        // Try connect IModel tipinde bir nesne geriye döner. Burada Q management işlemlerinin yapıldığı metodlar bulunuyor.
         public IModel CreateModel()
         {
             if (!IsConnected)
-            {
-                throw new InvalidOperationException("No RabbitMQ connections are available to perform this action");
-            }
+                TryConnect();
 
             return _connection.CreateModel();
         }
 
+        // Why Use Dispose : Connection'lar uygulamalar üzerinde yönetilmesi gereken yükler oluşturur bu neden bu sınıflar 
+        // IDisposable interface i ile oluşturulur.
         public void Dispose()
         {
+            // If Object Disposed Return
             if (_disposed) return;
 
+            // Else Dispose Status = true and connection try dispose
             _disposed = true;
 
             try

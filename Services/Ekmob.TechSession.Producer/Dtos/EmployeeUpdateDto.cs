@@ -8,7 +8,5 @@
         public string Email { get; set; }
         public string DepartmentId { get; set; }
         public string JobTitle { get; set; }
-
-        public DepartmentDto Department { get; set; }
     }
 }

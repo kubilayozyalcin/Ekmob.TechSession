@@ -1,54 +1,49 @@
-﻿using Ekmob.TechSession.Consumer.Entities;
-using Ekmob.TechSession.Consumer.Services.Abstractions;
-using Ekmob.TechSession.Consumer.Services.Concrete;
-using Ekmob.TechSession.Shared.BaseController;
-using Microsoft.AspNetCore.Http;
+﻿using Ekmob.TechSession.Application.Commands.CustomerCreate;
+using Ekmob.TechSession.Application.Queries;
+using Ekmob.TechSession.Application.Responses;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Ekmob.TechSession.Consumer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : CustomBaseController
+    public class CustomerController : ControllerBase
     {
-        #region Variables
-        private readonly ICustomerService _customerService;
-        #endregion
+        private readonly IMediator _mediator;
+        private readonly ILogger<CustomerController> _logger;
 
-        #region Constructor
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(IMediator mediator, ILogger<CustomerController> logger)
         {
-            _customerService = customerService;
-        }
-        #endregion
-
-        #region Crud_Actions
-        [HttpGet(Name = "GetCustomers")]
-        public async Task<IActionResult> GetAll()
-        {
-            var response = await _customerService.GetCustomers();
-            return CreateActionResultInstance(response);
+            _mediator = mediator;
+            _logger = logger;
         }
 
-        [HttpGet("{id:length(24)}", Name = "GetCustomer")]
-        public async Task<IActionResult> GetById(string id)
+        [HttpGet("GetCustomersByName/{Name}")]
+        [ProducesResponseType(typeof(IEnumerable<CustomerResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<IEnumerable<CustomerResponse>>> GetCustomersByUserName(string Name)
         {
-            var response = await _customerService.GetCustomer(id);
-            return CreateActionResultInstance(response);
+            var query = new GetCustomersNameQuery(Name);
+
+            var employee = await _mediator.Send(query);
+            if (employee.Count() == decimal.Zero)
+                return NotFound();
+
+            return Ok(employee);
         }
 
-
-        [HttpPost(Name = "CreateCustomer")]
-        public async Task<IActionResult> Create(Customer customer)
+        [HttpPost]
+        [ProducesResponseType(typeof(CustomerResponse), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<CustomerResponse>> CustomerCreate([FromBody] CustomerCreateCommand command)
         {
-            var response = await _customerService.Create(customer);
-            return CreateActionResultInstance(response);
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
-        #endregion
-
     }
 }
