@@ -14,14 +14,14 @@ namespace Ekmob.TechSession.Consumer.Extensions
             {
                 try
                 {
-                    var orderContext = scope.ServiceProvider.GetRequiredService<CustomerContext>();
+                    var customerContext = scope.ServiceProvider.GetRequiredService<CustomerContext>();
 
-                    if(orderContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
+                    if(customerContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.InMemory")
                     {
-                        orderContext.Database.Migrate();
+                        customerContext.Database.Migrate();
                     }
 
-                    CustomerContextSeed.SeedAsync(orderContext).Wait();
+                    CustomerContextSeed.SeedAsync(customerContext).Wait();
                 }
                 catch (Exception ex)
                 {

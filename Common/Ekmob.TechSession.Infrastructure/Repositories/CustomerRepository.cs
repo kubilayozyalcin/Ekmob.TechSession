@@ -18,11 +18,11 @@ namespace Ekmob.TechSession.Infrastructure.Repositories
 
         public async Task<IEnumerable<Customer>> GetCustomerByName(string name)
         {
-            var orderList = await _dbContext.Customers
+            var employeeList = await _dbContext.Customers
                       .Where(o => o.Name == name)
                       .ToListAsync();
 
-            return orderList;
+            return employeeList;
         }
     }
 }

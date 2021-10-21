@@ -19,8 +19,8 @@ namespace Ekmob.TechSession.RabbitMQ
         private bool _disposed;
 
         public DefaultRabbitMQPersistentConnection(
-            IConnectionFactory connectionFactory, 
-            int retryCount, 
+            IConnectionFactory connectionFactory,
+            int retryCount,
             ILogger<DefaultRabbitMQPersistentConnection> logger)
         {
             _connectionFactory = connectionFactory;
@@ -28,7 +28,8 @@ namespace Ekmob.TechSession.RabbitMQ
             _logger = logger;
         }
 
-        public bool IsConnected {
+        public bool IsConnected
+        {
             get
             {
                 // Connecttion Not Null & Open & Not Disposed
@@ -50,17 +51,18 @@ namespace Ekmob.TechSession.RabbitMQ
                 .Or<BrokerUnreachableException>()
                 .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                 {
-                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", 
+                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})",
                         $"{time.TotalSeconds:n1}", ex.Message);
                 });
 
             // Execute metodu run edilerek connection oluşturulur.
-            policy.Execute(() => {
+            policy.Execute(() =>
+            {
                 _connection = _connectionFactory.CreateConnection();
             });
 
             // İşlemler başarılı değilse ilgili eventlere yönlendirilir. Bu metodlarda tekrar connect olmasını sağlıyor olacağız.
-            if(IsConnected)
+            if (IsConnected)
             {
                 _connection.ConnectionShutdown += OnConnectionShutdown;
                 _connection.CallbackException += OnCallbackException;
@@ -110,9 +112,7 @@ namespace Ekmob.TechSession.RabbitMQ
         public IModel CreateModel()
         {
             if (!IsConnected)
-            {
-                throw new InvalidOperationException("No RabbitMQ connections are available to perform this action");
-            }
+                TryConnect();
 
             return _connection.CreateModel();
         }

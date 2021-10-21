@@ -31,11 +31,11 @@ namespace Ekmob.TechSession.Consumer.Controllers
         {
             var query = new GetCustomersNameQuery(Name);
 
-            var orders = await _mediator.Send(query);
-            if (orders.Count() == decimal.Zero)
+            var employee = await _mediator.Send(query);
+            if (employee.Count() == decimal.Zero)
                 return NotFound();
 
-            return Ok(orders);
+            return Ok(employee);
         }
 
         [HttpPost]

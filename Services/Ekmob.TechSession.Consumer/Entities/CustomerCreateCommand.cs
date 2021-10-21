@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Ekmob.TechSession.Application.Responses;
+using MediatR;
+using System;
 
 namespace Ekmob.TechSession.Consumer.Entities
 {
-    public class CustomerCreateCommand
+    public class CustomerCreateCommand : IRequest<CustomerResponse>
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string IdentityNumber { get; set; }
         public string Email { get; set; }

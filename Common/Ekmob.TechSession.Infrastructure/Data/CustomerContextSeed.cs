@@ -8,17 +8,17 @@ namespace Ekmob.TechSession.Infrastructure.Data
 {
     public class CustomerContextSeed
     {
-        public static async Task SeedAsync(CustomerContext orderContext)
+        public static async Task SeedAsync(CustomerContext customerContext)
         {
-            if (!orderContext.Customers.Any())
+            if (!customerContext.Customers.Any())
             {
-                orderContext.Customers.AddRange(GetPreconfiguredOrders());
+                customerContext.Customers.AddRange(GetPreconfiguredCustomer());
 
-                await orderContext.SaveChangesAsync();
+                await customerContext.SaveChangesAsync();
             }
         }
 
-        private static IEnumerable<Customer> GetPreconfiguredOrders()
+        private static IEnumerable<Customer> GetPreconfiguredCustomer()
         {
             return new List<Customer>()
             {

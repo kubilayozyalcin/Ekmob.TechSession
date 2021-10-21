@@ -25,15 +25,15 @@ namespace Ekmob.TechSession.Application.Handlers
 
         public async Task<CustomerResponse> Handle(CustomerCreateCommand request, CancellationToken cancellationToken)
         {
-            var orderEntity = _mapper.Map<Customer>(request);
-            if (orderEntity == null)
+            var employeeEntity = _mapper.Map<Customer>(request);
+            if (employeeEntity == null)
                 throw new ApplicationException("Entity could not be mapped!");
 
-            var order = await _customerRepository.AddAsync(orderEntity);
+            var employee = await _customerRepository.AddAsync(employeeEntity);
 
-            var orderResponse = _mapper.Map<CustomerResponse>(order);
+            var employeeResponse = _mapper.Map<CustomerResponse>(employee);
 
-            return orderResponse;
+            return employeeResponse;
         }
     }
 }

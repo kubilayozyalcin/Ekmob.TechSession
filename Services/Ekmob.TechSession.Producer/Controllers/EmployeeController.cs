@@ -115,7 +115,6 @@ namespace Ekmob.TechSession.Producer.Controllers
             eventMessage.IdentityNumber = employeeResult.Data.IdentityNumber;
             eventMessage.Email = employeeResult.Data.Email;
             eventMessage.JobTitle = employeeResult.Data.JobTitle;
-            eventMessage.DepartmentId = employeeResult.Data.DepartmentId;
             eventMessage.Id = employeeResult.Data.Id;
 
             try

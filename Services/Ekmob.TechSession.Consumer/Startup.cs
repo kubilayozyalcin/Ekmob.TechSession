@@ -17,6 +17,8 @@ using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
 using Ekmob.TechSession.Application;
 using Ekmob.TechSession.Infrastructure;
+using System;
+using MediatR;
 
 namespace Ekmob.TechSession.Consumer
 {
@@ -32,15 +34,8 @@ namespace Ekmob.TechSession.Consumer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region Configuration Dependencies
-            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
-            services.AddSingleton<IDatabaseSettings>(sp => sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
-            #endregion
 
-            #region Project Dependencies
-            services.AddTransient<ICustomerContext, CustomerContext>();
-            services.AddTransient<ICustomerService, CustomerService>();
-            #endregion
+            services.AddControllers();
 
             #region Add Infrastructure
 
@@ -54,30 +49,34 @@ namespace Ekmob.TechSession.Consumer
 
             #endregion
 
-            services.AddControllers();
-
+            // Add AutoMapper
             services.AddAutoMapper(typeof(Startup));
 
-
             #region EventBus
-            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
-            {
+
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp => {
                 var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
                 var factory = new ConnectionFactory()
                 {
                     HostName = Configuration["EventBus:HostName"]
                 };
 
                 if (!string.IsNullOrWhiteSpace(Configuration["EventBus:UserName"]))
+                {
                     factory.UserName = Configuration["EventBus:UserName"];
+                }
 
                 if (!string.IsNullOrWhiteSpace(Configuration["EventBus:Password"]))
+                {
                     factory.UserName = Configuration["EventBus:Password"];
+                }
 
                 var retryCount = 5;
-
                 if (!string.IsNullOrWhiteSpace(Configuration["EventBus:RetryCount"]))
+                {
                     retryCount = int.Parse(Configuration["EventBus:RetryCount"]);
+                }
 
                 return new DefaultRabbitMQPersistentConnection(factory, retryCount, logger);
             });
@@ -111,7 +110,7 @@ namespace Ekmob.TechSession.Consumer
             });
 
             // Extension
-            app.UseEventBusListener();
+            app.UseRabbitListener();
         }
     }
 }

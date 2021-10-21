@@ -21,7 +21,7 @@ services:
     ports:
       - "1433:1433"
     environment:
-      SA_PASSWORD: "tech.1717"
+      SA_PASSWORD: "Odb12345678"
       ACCEPT_EULA: "Y"
 
   ekmob.techsession.producer:
@@ -42,7 +42,7 @@ services:
     container_name: ekmobtechsessionconsumer
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:CustomerConnection=Server=localhost;Database=CustomerDb;User Id=sa;Password=Odb12345678"
+      - "ConnectionStrings:CustomerConnection=Server=Bigroup;Database=CustomerDb;Trusted_Connection=True"
       - "EventBus:HostName=rabbitmq"
     depends_on:
       - ekmobsqldb

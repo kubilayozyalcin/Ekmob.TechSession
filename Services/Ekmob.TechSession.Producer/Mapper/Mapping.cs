@@ -10,7 +10,7 @@ namespace Ekmob.TechSession.Producer.Mapper
     {
         public Mapping()
         {
-            CreateMap<CustomerCreateEvent, CustomerCreateCommand>().ReverseMap();
+            CreateMap<CustomerCreateEvent, Employee>().ReverseMap();
 
             CreateMap<Employee, EmployeeDto>().ReverseMap();
             CreateMap<Department, DepartmentDto>().ReverseMap();

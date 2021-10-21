@@ -9,6 +9,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
 using System.Text;
+using System.Threading;
 
 namespace Ekmob.TechSession.Consumer.Consumers
 {
@@ -36,7 +37,8 @@ namespace Ekmob.TechSession.Consumer.Consumers
             // Q Yönetecek Property
             var channel = _rabbitMQPersistentConnection.CreateModel();
             // Q yü Declare ediyoruz
-            channel.QueueDeclare(queue: EventBusConstants.CustomerCreateQueue, durable: false, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueDeclare(queue: EventBusConstants.CustomerCreateQueue, durable: false, exclusive: false, 
+                autoDelete: false, arguments: null);
 
             // Q yü Cosumer etmeye yarayan nesne
             var consumer = new EventingBasicConsumer(channel);
@@ -44,7 +46,7 @@ namespace Ekmob.TechSession.Consumer.Consumers
             consumer.Received += RecivedEvent;
 
             // Consume edilecek QName ve Consumer verilerek Mesaj consume edilir.
-            channel.BasicConsume(queue: EventBusConstants.CustomerCreateQueue, consumer: consumer);
+            channel.BasicConsume(queue: EventBusConstants.CustomerCreateQueue, autoAck: true, consumer: consumer);
         }
 
         // Gelen mesaj buraya düşer ve gelen mesaj için yapılacak işlemler

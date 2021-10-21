@@ -22,9 +22,9 @@ namespace Ekmob.TechSession.Application.Handlers
 
         public async Task<IEnumerable<CustomerResponse>> Handle(GetCustomersNameQuery request, CancellationToken cancellationToken)
         {
-            var orderList = await _customerRepository.GetCustomerByName(request.Name);
+            var employeeList = await _customerRepository.GetCustomerByName(request.Name);
 
-            var response = _mapper.Map<IEnumerable<CustomerResponse>>(orderList);
+            var response = _mapper.Map<IEnumerable<CustomerResponse>>(employeeList);
 
             return response;
         }
