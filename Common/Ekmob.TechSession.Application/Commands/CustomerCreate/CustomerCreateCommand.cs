@@ -1,5 +1,6 @@
 ﻿using Ekmob.TechSession.Application.Responses;
 using MediatR;
+using System.Runtime.Serialization;
 
 namespace Ekmob.TechSession.Application.Commands.CustomerCreate
 {
@@ -10,7 +11,6 @@ namespace Ekmob.TechSession.Application.Commands.CustomerCreate
         public string Email { get; set; }
         public string DepartmentName { get; set; }
         public string JobTitle { get; set; }
-
         public string CreateDate { get; set; }
     }
 }
