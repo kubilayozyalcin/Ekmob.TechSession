@@ -6,10 +6,11 @@ namespace Ekmob.TechSession.Application.Commands.CustomerCreate
     {
         public CustomerCreateValidator()
         {
-            RuleFor(v => v.IdentityNumber)
+            RuleFor(v => v.Email)
+                .EmailAddress()
                 .NotEmpty();
 
-            RuleFor(v => v.DepartmentName)
+            RuleFor(v => v.Name)
                 .NotEmpty();
         }
     }

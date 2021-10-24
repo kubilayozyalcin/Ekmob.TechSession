@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using Ekmob.TechSession.Application.Commands.CustomerCreate;
+using Ekmob.TechSession.Application.Mapping;
+using Ekmob.TechSession.Application.PipelineBehaviours;
+using Ekmob.TechSession.Application.Responses;
+using Ekmob.TechSession.Domain.Repositories;
+using Ekmob.TechSession.Infrastructure.Repositories;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Ekmob.TechSession.Application.Mapping;
-using Ekmob.TechSession.Application.PipelineBehaviours;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ekmob.TechSession.Application
 {
@@ -17,9 +17,17 @@ namespace Ekmob.TechSession.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
+
+            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddMediatR(typeof(CustomerCreateCommand).GetTypeInfo().Assembly);
+
+            services.AddScoped(typeof(ICustomerRepository), typeof(CustomerRepository));
+
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));

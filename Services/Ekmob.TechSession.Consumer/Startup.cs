@@ -1,24 +1,17 @@
+using Ekmob.TechSession.Application;
 using Ekmob.TechSession.Consumer.Consumers;
-using Ekmob.TechSession.Consumer.Data.Abstractions;
-using Ekmob.TechSession.Consumer.Data.Concrete;
 using Ekmob.TechSession.Consumer.Extension;
-using Ekmob.TechSession.Consumer.Services.Abstractions;
-using Ekmob.TechSession.Consumer.Services.Concrete;
-using Ekmob.TechSession.Consumer.Settings;
+using Ekmob.TechSession.Infrastructure;
 using Ekmob.TechSession.RabbitMQ;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using RabbitMQ.Client;
-using Ekmob.TechSession.Application;
-using Ekmob.TechSession.Infrastructure;
-using System;
-using MediatR;
 
 namespace Ekmob.TechSession.Consumer
 {
@@ -34,6 +27,7 @@ namespace Ekmob.TechSession.Consumer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMediatR(typeof(Startup));
 
             services.AddControllers();
 

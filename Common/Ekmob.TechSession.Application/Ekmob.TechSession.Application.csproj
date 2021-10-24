@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ekmob.TechSession.Domain\Ekmob.TechSession.Domain.csproj" />
+    <ProjectReference Include="..\Ekmob.TechSession.Infrastructure\Ekmob.TechSession.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
