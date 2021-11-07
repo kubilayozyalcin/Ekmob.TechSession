@@ -42,7 +42,7 @@ services:
     container_name: ekmobtechsessionconsumer
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:CustomerConnection=Server=Bigroup;Database=CustomerDb;Trusted_Connection=True"
+      - "ConnectionStrings:CustomerConnection=Server=localhost;Database=CustomerDb;Trusted_Connection=True"
       - "EventBus:HostName=rabbitmq"
     depends_on:
       - ekmobsqldb
